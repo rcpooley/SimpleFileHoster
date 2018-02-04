@@ -1,0 +1,32 @@
+<html>
+<head>
+    <title>Robert's Files</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="datasync-js.js"></script>
+</head>
+<body>
+<div id="explorer"></div>
+
+<script>
+    let ds = require('datasync-js');
+    let client = new ds.DataStoreClient();
+    let store = client.getStore('store');
+
+    let socket = io();
+    socket.on('connect', function () {
+        client.setSocket(socket);
+        client.connectStore('store');
+        getFiles('');
+    });
+
+    function getFiles(path) {
+        store.ref(socket.id).ref('fetch').update(path);
+    }
+
+    store.ref(socket.id).ref('files').on('updateDirect', function (value) {
+        console.log('got', value);
+    });
+</script>
+</body>
+</html>

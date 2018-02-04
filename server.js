@@ -3,7 +3,14 @@ let PORT = 3344;
 let express = require('express');
 let http = require('http');
 let fs = require('fs');
-let config = require('./files.json');
+let config;
+
+try {
+    config = require('./files.json');
+} catch (e) {
+    console.error('Could not load files.json');
+    return;
+}
 
 let app = express();
 
